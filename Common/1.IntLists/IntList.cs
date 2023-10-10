@@ -38,37 +38,91 @@ namespace Common
         public void Add(int value)
         {
             //TODO #1: add a new integer to the end of the list
+            // When adding a new element to a linked list, we need to create a new list node and add a reference of it to the previous last item
+
+            // Create a new node
+            IntListNode newNode = new IntListNode(value);
+            // If the new node is the first element to be added to the list, then add a reference of it to First. If not, search for a null reference to a node
+            if(First.Next == null)
+            {
+                First.Next = newNode;
+                return;
+            }
+
+            IntListNode currentNode = First;
+            while(currentNode.Next != null)
+            {
+                currentNode = currentNode.Next;
+            }
+            // Add the new node to the list
+            currentNode.Next = newNode;
         }
 
         private IntListNode GetNode(int index)
         {
             //TODO #2: Return the element in position 'index'
-            return null;
+            int nodeIndex = 0;
+            IntListNode currentNode = First;
+            while(nodeIndex != index && currentNode.Next != null)
+            {
+                currentNode = currentNode.Next;
+                nodeIndex++;
+            }
+            
+            if(nodeIndex == index)
+            {
+                return currentNode;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         
         public int Get(int index)
         {
             //TODO #3: return the element on the index-th position. YOU MUST USE GetNode(int). O if the position is out of bounds
-            return 0;
+            if(GetNode(index) == null)
+            {
+                return 0; // the index is out of the range of the list
+            }
+            return GetNode(index).Value;
+            
         }
 
         
         public int Count()
         {
             //TODO #4: return the number of elements on the list
-            return 0;
+            int count = 0;
+            IntListNode currentNode = First;
+            while(currentNode.Next != null)
+            {
+                count++;
+                currentNode = currentNode.Next;
+            }
+            return count;
         }
         
         public void Remove(int index)
         {
             //TODO #5: remove the element on the index-th position. Do nothing if position is out of bounds
+            if(GetNode(index) == null)
+            {
+                return;
+            }
+            // Link the previous node's "Next" property to the index-th node's "Next" property
+            // The unlinked index-th node will eventually be removed by the garbage collector because it won't be used
+            GetNode(index - 1).Next = GetNode(index).Next;
         }
 
         
         public void Clear()
         {
             //TODO #6: remove all the elements on the list
+            // Unlink the whole list
+            First.Next = null;
         }
     }
 }
