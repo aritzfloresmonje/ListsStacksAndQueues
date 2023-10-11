@@ -43,9 +43,9 @@ namespace Common
             // Create a new node
             IntListNode newNode = new IntListNode(value);
             // If the new node is the first element to be added to the list, then add a reference of it to First. If not, search for a null reference to a node
-            if(First.Next == null)
+            if(First == null)
             {
-                First.Next = newNode;
+                First = newNode;
                 return;
             }
 
@@ -73,10 +73,7 @@ namespace Common
             {
                 return currentNode;
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
 
         
