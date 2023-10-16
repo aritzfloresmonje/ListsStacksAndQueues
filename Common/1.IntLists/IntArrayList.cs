@@ -40,11 +40,10 @@ namespace Common
         
         public int Count()
         {
-            return Values.Length;
+            return NumElements;
         }
 
 
-       
         public void Remove(int index)
         {
             // Move every element on the right side of the index-th element to its left side, then decrease NumElements so it is not considered

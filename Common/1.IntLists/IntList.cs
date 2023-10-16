@@ -94,10 +94,10 @@ namespace Common
             //TODO #4: return the number of elements on the list
             int count = 0;
             IntListNode currentNode = First;
-            while(currentNode.Next != null)
+            while(currentNode != null)
             {
-                count++;
                 currentNode = currentNode.Next;
+                count++;
             }
             return count;
         }
@@ -109,9 +109,23 @@ namespace Common
             {
                 return;
             }
+            if(GetNode(index).Next == null)
+            {
+                IntListNode newLastNode = GetNode(index - 1);
+                newLastNode.Next = null;
+                return;
+            }
+            if(GetNode(index) == First)
+            {
+                First = First.Next;
+                return;
+            }
             // Link the previous node's "Next" property to the index-th node's "Next" property
             // The unlinked index-th node will eventually be removed by the garbage collector because it won't be used
-            GetNode(index - 1).Next = GetNode(index).Next;
+            IntListNode previousNode = GetNode(index - 1);
+            IntListNode node = GetNode(index);
+
+            previousNode.Next = node.Next;
         }
 
         
@@ -119,7 +133,7 @@ namespace Common
         {
             //TODO #6: remove all the elements on the list
             // Unlink the whole list
-            First.Next = null;
+            First = null;
         }
     }
 }
