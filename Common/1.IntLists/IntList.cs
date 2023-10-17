@@ -6,6 +6,7 @@ namespace Common
     {
         public int Value;
         public IntListNode Next = null;
+        public IntListNode Previous = null;
 
         public IntListNode(int value)
         {
@@ -16,6 +17,8 @@ namespace Common
     public class IntList : IList
     {
         IntListNode First = null;
+        private int numElements = 0;
+        IntListNode Last = null;
 
         //This method returns all the elements on the list as a string
         //Use it as an example on how to access all the elements on the list
@@ -43,19 +46,17 @@ namespace Common
             // Create a new node
             IntListNode newNode = new IntListNode(value);
             // If the new node is the first element to be added to the list, then add a reference of it to First. If not, search for a null reference to a node
-            if(First == null)
+            if (Last == null && First == null)
             {
                 First = newNode;
+                Last = First;
+                numElements++;
                 return;
             }
-
-            IntListNode currentNode = First;
-            while(currentNode.Next != null)
-            {
-                currentNode = currentNode.Next;
-            }
-            // Add the new node to the list
-            currentNode.Next = newNode;
+            Last.Next = newNode;
+            newNode.Previous = Last;
+            Last = newNode;
+            numElements++;
         }
 
         private IntListNode GetNode(int index)
@@ -63,7 +64,7 @@ namespace Common
             //TODO #2: Return the element in position 'index'
             int nodeIndex = 0;
             IntListNode currentNode = First;
-            while(nodeIndex != index && currentNode.Next != null)
+            while(nodeIndex != index && currentNode != null)
             {
                 currentNode = currentNode.Next;
                 nodeIndex++;
@@ -85,55 +86,52 @@ namespace Common
                 return 0; // the index is out of the range of the list
             }
             return GetNode(index).Value;
-            
         }
 
         
         public int Count()
         {
             //TODO #4: return the number of elements on the list
-            int count = 0;
-            IntListNode currentNode = First;
-            while(currentNode != null)
-            {
-                currentNode = currentNode.Next;
-                count++;
-            }
-            return count;
+            return numElements;
         }
         
         public void Remove(int index)
         {
             //TODO #5: remove the element on the index-th position. Do nothing if position is out of bounds
-            if(GetNode(index) == null)
+            IntListNode node = GetNode(index);
+            if(node == null)
             {
                 return;
             }
-            if(GetNode(index).Next == null)
+            
+            if(node == Last)
             {
-                IntListNode newLastNode = GetNode(index - 1);
-                newLastNode.Next = null;
+                Last = Last.Previous;
+                Last.Next = null;
+                numElements--;
                 return;
             }
-            if(GetNode(index) == First)
+
+            if(node == First)
             {
                 First = First.Next;
+                First.Previous = null;
+                numElements--;
                 return;
             }
-            // Link the previous node's "Next" property to the index-th node's "Next" property
-            // The unlinked index-th node will eventually be removed by the garbage collector because it won't be used
-            IntListNode previousNode = GetNode(index - 1);
-            IntListNode node = GetNode(index);
 
-            previousNode.Next = node.Next;
+            node.Previous.Next = node.Next;
+            node.Next.Previous = node.Previous;
+            numElements--;
         }
 
-        
+
         public void Clear()
         {
             //TODO #6: remove all the elements on the list
             // Unlink the whole list
             First = null;
+            numElements = 0;
         }
     }
 }
