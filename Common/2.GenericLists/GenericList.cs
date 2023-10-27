@@ -44,7 +44,7 @@ public class GenericList<T> : IGenericList<T>
         GenericListNode<T> newNode = new GenericListNode<T>(value);
 
         // If the element added is the first one in the list
-        if (/*Last == null &&*/ First == null)
+        if (First == null)
         {
             First = new GenericListNode<T>(value);
             Last = First;
