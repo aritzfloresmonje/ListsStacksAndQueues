@@ -4,8 +4,7 @@ public class GenericListNode<T>
 {
     public T Value;
     public GenericListNode<T> Next = null;
-    public GenericListNode<T> Previous = null;
-
+    
     public GenericListNode(T value)
     {
       Value = value;
@@ -44,15 +43,16 @@ public class GenericList<T> : IGenericList<T>
 
         GenericListNode<T> newNode = new GenericListNode<T>(value);
 
-        if (Last == null && First == null)
+        // If the element added is the first one in the list
+        if (/*Last == null &&*/ First == null)
         {
             First = new GenericListNode<T>(value);
             Last = First;
             numElements++;
             return;
         }
+
         Last.Next = newNode;
-        newNode.Previous = Last;
         Last = newNode;
         numElements++;
     }
@@ -101,23 +101,24 @@ public class GenericList<T> : IGenericList<T>
         if(node == null) return;
         if (node == Last)
         {
-            Last = Last.Previous;
-            Last.Next = null;
+            // The previous node becomes the last node
+            GenericListNode<T> newLastNode = FindNode(index - 1);
+            Last = newLastNode;
             numElements--;
             return;
         }
 
         if (node == First)
         {
+            // The next node becomes the first node
             First = First.Next;
-            First.Previous = null;
             numElements--;
             return;
         }
 
-        node.Previous.Next = node.Next;
-        node.Next.Previous = node.Previous;
-        numElements--;
+        // Link the previous node's "Next" property to node's next node
+        GenericListNode<T> previousNode = FindNode(index - 1);
+        previousNode.Next = node.Next;
     }
 
     public void Clear()

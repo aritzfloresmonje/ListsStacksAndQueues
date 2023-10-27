@@ -6,7 +6,6 @@ namespace Common
     {
         public int Value;
         public IntListNode Next = null;
-        public IntListNode Previous = null;
 
         public IntListNode(int value)
         {
@@ -53,8 +52,8 @@ namespace Common
                 numElements++;
                 return;
             }
+
             Last.Next = newNode;
-            newNode.Previous = Last;
             Last = newNode;
             numElements++;
         }
@@ -106,23 +105,24 @@ namespace Common
             
             if(node == Last)
             {
-                Last = Last.Previous;
-                Last.Next = null;
+                // The previous node becomes the last node
+                IntListNode newLastNode = GetNode(index - 1);
+                Last = newLastNode;
                 numElements--;
                 return;
             }
 
             if(node == First)
             {
+                // The next node becomes the first node
                 First = First.Next;
-                First.Previous = null;
                 numElements--;
                 return;
             }
 
-            node.Previous.Next = node.Next;
-            node.Next.Previous = node.Previous;
-            numElements--;
+            // Link the previous node's "Next" property to the node's next node
+            IntListNode previousNode = GetNode(index - 1);
+            previousNode.Next = node.Next;
         }
 
 
